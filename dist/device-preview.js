@@ -111,7 +111,7 @@ function configure(_opts){
 
 // Setup before first update
 function add(selector, options){
-	let _nodes = opts.context.querySelectorAll(selector);
+	let _nodes = document.querySelectorAll(selector);
 	_nodes = Array.prototype.slice.call(_nodes)
 	for(i in _nodes) load(_nodes[i], options)
 	nodes = nodes.concat(_nodes)
@@ -127,7 +127,9 @@ function remove(node){
 // Sets up initial classes on nodes
 function load(node, options){
 
-	node.device = {}
+	node.device = {
+		screenshot: 'placeholder.png'
+	}
 
 	if(node.attributes.device){
 		let settings = node.attributes.device ? extract_settings(node.attributes.device.nodeValue) : {};
@@ -142,19 +144,43 @@ function load(node, options){
 		}
 	}
 
+	node.appendChild(underlay_el());
+	node.appendChild(screenshot_el(node.device.screenshot));
+	node.appendChild(overlay_el());
+
 	node.dispatchEvent(events['device/load'])
 
+}
+
+// Dom elements
+
+function screenshot_el(screenshot){
+	const el = document.createElement("div")
+	el.className = "device-screenshot"
+	el.setAttribute("style", "background-image: url("+screenshot+")");
+	return el;
+}
+
+function underlay_el(){
+	const el = document.createElement("div")
+	el.className = "device-underlay"
+	return el;
+}
+
+function overlay_el(){
+	const el = document.createElement("div")
+	el.className = "device-overlay"
+	return el;
 }
 
 // Update all nodes
 function update(){
 	let _nodes = nodes;
-	for(i in _nodes) toggle(_nodes[i], visible)
+	for(i in _nodes) render(_nodes[i])
 }
 
 // Render device
 function render(node){
-
 	node.dispatchEvent(events['device/update'])
 }
 
@@ -167,8 +193,8 @@ function extract_settings(string){
 		if(!arr[0]) return;
 		let key = arr[0].trim();
 		let value = arr[1] ? arr[1].trim() : true;
-		if(['delay', 'offset', 'delay_all'].indexOf(key) !== -1) value = parseInt(value)
-		if(['in_view'].indexOf(key) !== -1) value = value.split(',').map(function(value){ return parseFloat(value) })
+		if(['numeric...'].indexOf(key) !== -1) value = parseInt(value)
+		if(['numeric_map...'].indexOf(key) !== -1) value = value.split(',').map(function(value){ return parseFloat(value) })
 		settings[key] = arr[1] ? value : true
 	});
 	return settings;
@@ -191,11 +217,11 @@ function unbind(){
 
 // Set default options
 function init(options){
-	if(opts.context){
-		add('[device]');
-	}
+	add('[device]');
 	bind();
 }
+
+init()
 
 module.exports = {
 	add: add,

@@ -1,5 +1,17 @@
+$screenshot-offset-mobile: 5px;
+$screen-border-radius-mobile: 15px;
+$screenshot-bottom-padding-mobile: 50px;
+
+$screenshot-offset-tablet: 5px;
+$screen-border-radius-tablet: 15px;
+$screenshot-bottom-padding-tablet: 50px;
+
+$screenshot-offset-desktop: 5px;
+$screen-border-radius-desktop: 15px;
+$screenshot-bottom-padding-desktop: 20px;
+
 [device] {
-    background: black;
+    position: relative;
 }
 
 [device-type=desktop] {
@@ -7,11 +19,110 @@
 }
 
 [device-type=mobile] {
-    max-width: 500px;
+    max-width: 400px;
     margin: 0 auto;
     padding-bottom: 80%;
 }
 
 [device-type=tablet] {
     padding-bottom: 50%;
+}
+
+.device-screenshot,
+.device-overlay {
+    position: absolute;
+}
+
+[device-type=tablet] {
+    .device-screenshot,
+    .device-overlay {
+        top: $screenshot-offset-tablet;
+        left: $screenshot-offset-tablet;
+        right: $screenshot-offset-tablet;
+        bottom: $screenshot-offset-tablet + $screenshot-bottom-padding-tablet;
+        border-radius: $screen-border-radius-tablet;
+        &:before, &:after {
+            border-radius: $screen-border-radius-tablet;
+        }
+    }
+}
+
+[device-type=desktop] {
+    .device-screenshot,
+    .device-overlay {
+        top: $screenshot-offset-desktop;
+        left: $screenshot-offset-desktop;
+        right: $screenshot-offset-desktop;
+        bottom: $screenshot-offset-desktop + $screenshot-bottom-padding-desktop;
+        border-radius: $screen-border-radius-desktop;
+        &:before, &:after {
+            border-radius: $screen-border-radius-desktop;
+        }
+    }
+}
+
+[device-type=mobile] {
+    .device-screenshot,
+    .device-overlay {
+        top: $screenshot-offset-mobile;
+        left: $screenshot-offset-mobile;
+        right: $screenshot-offset-mobile;
+        bottom: $screenshot-offset-mobile + $screenshot-bottom-padding-mobile;
+        border-radius: $screen-border-radius-mobile;
+        &:before, &:after {
+            border-radius: $screen-border-radius-mobile;
+        }
+    }
+}
+
+.device-screenshot {
+    background-size: 100%;
+}
+
+.device-overlay {
+    overflow: hidden;
+    &:before,
+    &:after {
+        content: '';
+        position: absolute;
+        width: 100%;
+        height: 100%;
+    }
+    &:before {
+        background: linear-gradient(45deg, rgba(255,255,255,0) 0%, rgba(255,255,255,1) 80%, rgba(255,255,255,0.2) 100%);
+        opacity: 0.1;
+    }
+    &:after {
+        box-shadow: inset 0 0 10px rgba(0,0,0,1);
+    }
+}
+
+.device-underlay {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+}
+
+[device-type=mobile],
+[device-type=tablet] {
+    .device-underlay {
+        &:after {
+            content: '';
+            position: absolute;
+            bottom: $screenshot-offset-mobile;
+            left: 50%;
+            transform: translateX(-50%);
+            width: $screenshot-bottom-padding-mobile - $screenshot-offset-mobile;
+            height: $screenshot-bottom-padding-mobile - $screenshot-offset-mobile;
+            border-radius: 50%;
+            background: black;
+        }
+    }
+}
+
+.device-underlay {
+    border-radius: 20px;
+    background: #444;
 }
