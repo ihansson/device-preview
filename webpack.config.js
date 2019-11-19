@@ -39,7 +39,7 @@ module.exports = {
   entry: {
     "device-preview": "./src/device-preview.js",
     "device-preview.min": "./src/device-preview.js",
-    "device-preview-optional": "./src/device-preview-optional.scss",
+    "device-preview-styles": "./src/device-preview.scss",
   },
   devtool: 'source-map',
   mode: PROD ? 'production' : 'development',
