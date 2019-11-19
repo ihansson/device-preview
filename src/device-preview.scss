@@ -22,7 +22,8 @@ $screenshot-bottom-padding-desktop: 0;
 
 [device] { 
     position: relative;
-    animation: rotate 6s infinite linear;
+    // animation: rotate 6s infinite linear;
+    transform: rotateX(25deg ) rotateY(25deg ) rotateZ(5deg);
 }
 
 @keyframes rotate {
@@ -174,7 +175,7 @@ $screenshot-bottom-padding-desktop: 0;
     }
 }
 
-$device-thickness: 25px;
+$device-thickness: 12px;
 
 .device-back {
     position: absolute;

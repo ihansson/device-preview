@@ -236,6 +236,24 @@ module.exports = {
 	init: init
 };
 
+
+// TEMP
+
+var range_nodes = document.querySelectorAll('[type=range]')
+
+console.log(range_nodes)
+
+range_nodes.forEach(function(node){
+	node.addEventListener('input', function(e){
+		console.log(e.target.value)
+		document.querySelector('#'+e.target.attributes.id.nodeValue+'-value').innerHTML = e.target.value
+
+		nodes.forEach(function(device){
+			device.setAttribute("style", "transform: rotateX("+document.getElementById('x').value+"deg) rotateY("+document.getElementById('y').value+"deg) rotateZ("+document.getElementById('z').value+"deg);");
+		})
+	});
+});
+
 /***/ })
 /******/ ]);
 //# sourceMappingURL=device-preview.js.map
