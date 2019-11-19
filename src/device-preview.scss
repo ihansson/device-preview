@@ -1,14 +1,14 @@
 $screenshot-offset-mobile: 5px;
-$screen-border-radius-mobile: 15px;
+$screen-border-radius-mobile: 8px;
 $screenshot-bottom-padding-mobile: 50px;
 
 $screenshot-offset-tablet: 5px;
-$screen-border-radius-tablet: 15px;
-$screenshot-bottom-padding-tablet: 50px;
+$screen-border-radius-tablet: 10px;
+$screenshot-bottom-padding-tablet: 40px;
 
 $screenshot-offset-desktop: 5px;
 $screen-border-radius-desktop: 15px;
-$screenshot-bottom-padding-desktop: 20px;
+$screenshot-bottom-padding-desktop: 0;
 
 [device] {
     position: relative;
@@ -19,13 +19,13 @@ $screenshot-bottom-padding-desktop: 20px;
 }
 
 [device-type=mobile] {
-    max-width: 400px;
+    max-width: 360px;
     margin: 0 auto;
-    padding-bottom: 80%;
+    padding-bottom: 85%;
 }
 
 [device-type=tablet] {
-    padding-bottom: 50%;
+    padding-bottom: 66%;
 }
 
 .device-screenshot,
@@ -105,9 +105,22 @@ $screenshot-bottom-padding-desktop: 20px;
     right: 0;
 }
 
+.device-underlay {background-color: #5d4257;
+background-image: linear-gradient(315deg, #5d4257 0%, #a5c7b7 74%);
+
+    box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23), 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
+}
+
+[device-type=desktop] {
+    .device-underlay {
+        border-radius: $screen-border-radius-desktop;
+    }
+}
+
 [device-type=mobile],
 [device-type=tablet] {
     .device-underlay {
+        border-radius: $screen-border-radius-mobile;
         &:after {
             content: '';
             position: absolute;
@@ -117,12 +130,18 @@ $screenshot-bottom-padding-desktop: 20px;
             width: $screenshot-bottom-padding-mobile - $screenshot-offset-mobile;
             height: $screenshot-bottom-padding-mobile - $screenshot-offset-mobile;
             border-radius: 50%;
-            background: black;
+            background: linear-gradient(45deg, rgba(0,0,0,0.1) 0%, rgba(25,25,25,0.5) 100%);
         }
     }
 }
 
-.device-underlay {
-    border-radius: 20px;
-    background: #444;
+[device-type=tablet] {
+    .device-underlay {
+        border-radius: $screen-border-radius-tablet;
+        &:after {
+            bottom: $screenshot-offset-tablet;
+            width: $screenshot-bottom-padding-tablet - $screenshot-offset-tablet;
+            height: $screenshot-bottom-padding-tablet - $screenshot-offset-tablet;
+        }
+    }
 }
