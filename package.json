@@ -1,0 +1,38 @@
+{
+  "name": "device-preview",
+  "version": "0.0.1",
+  "description": "Render device previews with perspective from flat images.",
+  "main": "src/device-preview.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ihansson/device-preview.git"
+  },
+  "keywords": [
+    "javascript",
+    "mobile",
+    "tablet",
+    "animation"
+  ],
+  "author": "Ian Hansson",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ihansson/device-preview/issues"
+  },
+  "homepage": "https://github.com/ihansson/device-preview#readme",
+  "devDependencies": {
+    "babel-core": "^6.26.3",
+    "babel-loader": "^8.0.6",
+    "babel-preset-es2015": "^6.24.1",
+    "css-loader": "^3.2.0",
+    "mini-css-extract-plugin": "^0.8.0",
+    "node-sass": "^4.13.0",
+    "sass-loader": "^7.3.1",
+    "terser-webpack-plugin": "^2.2.1",
+    "webpack": "^4.41.2",
+    "webpack-dev-server": "^3.9.0",
+    "webpack-fix-style-only-entries": "^0.4.0"
+  }
+}
