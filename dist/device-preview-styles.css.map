@@ -1,1 +1,1 @@
-{"version":3,"sources":[],"names":[],"mappings":"","file":"dist/device-preview-styles.css","sourcesContent":[],"sourceRoot":""}
+{"version":3,"sources":["webpack://device-preview/./src/device-preview.scss"],"names":[],"mappings":"AAAA,SAAS,iBAAiB,sBAAsB,mBAAmB,qBAAqB,gBAAgB,cAAc,mBAAmB,qBAAqB","file":"dist/device-preview-styles.css","sourcesContent":["[device]{background:black}[device-type=desktop]{padding-bottom:66%}[device-type=mobile]{max-width:500px;margin:0 auto;padding-bottom:80%}[device-type=tablet]{padding-bottom:50%}\n"],"sourceRoot":""}
