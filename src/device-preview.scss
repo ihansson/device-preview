@@ -10,8 +10,31 @@ $screenshot-offset-desktop: 5px;
 $screen-border-radius-desktop: 15px;
 $screenshot-bottom-padding-desktop: 0;
 
-[device] {
+* {
+    -webkit-transform-style: preserve-3d;
+    transform-style: preserve-3d;
+}
+
+.page {
+    -webkit-perspective: 1200px;                
+    perspective: 1200px;   
+}
+
+[device] { 
     position: relative;
+    animation: rotate 6s infinite linear;
+}
+
+@keyframes rotate {
+    0% { 
+        transform: rotateX(25deg ) rotateY(025deg ) rotateZ(5deg );
+    }
+    50% {
+        transform: rotateX(45deg ) rotateY(180deg ) rotateZ(15deg );
+    }
+    100% { 
+        transform: rotateX(25deg ) rotateY(270deg ) rotateZ(5deg );
+    }
 }
 
 [device-type=desktop] {
@@ -105,10 +128,9 @@ $screenshot-bottom-padding-desktop: 0;
     right: 0;
 }
 
-.device-underlay {background-color: #5d4257;
-background-image: linear-gradient(315deg, #5d4257 0%, #a5c7b7 74%);
-
-    box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23), 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
+.device-underlay {
+    background-color: #5d4257;
+    background-image: linear-gradient(315deg, #5d4257 0%, #a5c7b7 74%);
 }
 
 [device-type=desktop] {
@@ -144,4 +166,65 @@ background-image: linear-gradient(315deg, #5d4257 0%, #a5c7b7 74%);
             height: $screenshot-bottom-padding-tablet - $screenshot-offset-tablet;
         }
     }
+}
+
+[device] {
+    * {
+        opacity: 1;
+    }
+}
+
+$device-thickness: 25px;
+
+.device-back {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-color: #5d4257;
+    background-image: linear-gradient(315deg, #5d4257 0%, #a5c7b7 74%);
+    transform: translate3d(0,0,-$device-thickness);
+    border-radius: $screen-border-radius-tablet;
+}
+
+.device-left,
+.device-right,
+.device-top,
+.device-bottom {
+    position: absolute;
+    background-color: #5d4257;
+    background-image: linear-gradient(315deg, #5d4257 0%, #a5c7b7 74%);
+}
+
+.device-left {
+    background: #a5c7b7;
+}
+
+.device-left,
+.device-right {
+    top: $screen-border-radius-tablet;
+    bottom: $screen-border-radius-tablet;
+    left: 0;
+    width: $device-thickness;
+    transform: rotateY(270deg) translate3d(($device-thickness / 2) * -1, 0, ($device-thickness / 2))
+}
+
+.device-right {
+    left: auto;
+    right: 0;
+    transform: rotateY(270deg) translate3d(($device-thickness / 2) * -1, 0, ($device-thickness / 2) * -1)
+}
+
+.device-top,
+.device-bottom {
+    top: 0;
+    left: $screen-border-radius-tablet;
+    right: $screen-border-radius-tablet;
+    height: $device-thickness;
+    transform: rotateX(90deg) translate3d(0, ($device-thickness / 2) * -1, ($device-thickness / 2))
+}
+
+.device-bottom {
+    top: auto;
+    bottom: 0;
+    transform: rotateX(90deg) translate3d(0, ($device-thickness / 2) * -1, ($device-thickness / 2) * -1)
 }

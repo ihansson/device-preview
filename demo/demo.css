@@ -187,6 +187,10 @@ dt {
 
 /* Code */
 
+h2 {
+	display: none;
+}
+
 .code {
 	background: rgba(39,40,34,0.95); 
 	padding: 15px;
@@ -195,6 +199,7 @@ dt {
 	color: rgba(255,255,255,0.8);
 	overflow: hidden;
 	margin-bottom: 20px;
+	display: none;
 }
 
 @media (min-width: 800px) {

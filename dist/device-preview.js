@@ -144,6 +144,11 @@ function load(node, options){
 		}
 	}
 
+	['top','bottom','left','right','back'].forEach(ex => {
+		const el = document.createElement("div")
+		el.className = "device-"+ex;
+		node.appendChild(el);
+	})
 	node.appendChild(underlay_el());
 	node.appendChild(screenshot_el(node.device.screenshot));
 	node.appendChild(overlay_el());
