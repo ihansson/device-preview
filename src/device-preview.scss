@@ -275,3 +275,15 @@ $device-thickness: 12px;
     height: 100%;
     opacity: 1;
 }
+
+.device-shadow {
+    background: black;
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    opacity: 0.5;
+    filter: blur(12px);
+    transform:  translate3d(0, 0, -200px);
+}
