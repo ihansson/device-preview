@@ -128,7 +128,8 @@ function remove(node){
 function load(node, options){
 
 	node.device = {
-		screenshot: 'placeholder.png'
+		screenshot: 'placeholder.png',
+		corner_resolution: 5
 	}
 
 	if(node.attributes.device){
@@ -149,6 +150,12 @@ function load(node, options){
 		el.className = "device-"+ex;
 		node.appendChild(el);
 	})
+	console.log(node.device)
+
+	node.appendChild(corner_el('bottom-left', node.device.corner_resolution));
+	node.appendChild(corner_el('bottom-right', node.device.corner_resolution));
+	node.appendChild(corner_el('top-left', node.device.corner_resolution));
+	node.appendChild(corner_el('top-right', node.device.corner_resolution));
 	node.appendChild(underlay_el());
 	node.appendChild(screenshot_el(node.device.screenshot));
 	node.appendChild(overlay_el());
@@ -158,6 +165,28 @@ function load(node, options){
 }
 
 // Dom elements
+
+function corner_el(position, resolution){
+	const el = document.createElement("div")
+	el.className = "device-corner "+position
+	let _previous_segment
+	let rotation_per_segment = 90 / resolution;
+	let width = 12 / resolution;
+	while(resolution){
+		resolution--;
+		let segment = document.createElement("div")
+		segment.className = "device-corner-segment";
+		segment.setAttribute("style", "transform: rotateY("+rotation_per_segment+"deg); width:"+width+"px");
+		if(_previous_segment){
+			_previous_segment.appendChild(segment)
+		} else {
+			el.appendChild(segment)
+		}
+		_previous_segment = segment
+	}
+	console.log(el, resolution)
+	return el;
+}
 
 function screenshot_el(screenshot){
 	const el = document.createElement("div")
@@ -241,13 +270,9 @@ module.exports = {
 
 var range_nodes = document.querySelectorAll('[type=range]')
 
-console.log(range_nodes)
-
 range_nodes.forEach(function(node){
 	node.addEventListener('input', function(e){
-		console.log(e.target.value)
 		document.querySelector('#'+e.target.attributes.id.nodeValue+'-value').innerHTML = e.target.value
-
 		nodes.forEach(function(device){
 			device.setAttribute("style", "transform: rotateX("+document.getElementById('x').value+"deg) rotateY("+document.getElementById('y').value+"deg) rotateZ("+document.getElementById('z').value+"deg);");
 		})
