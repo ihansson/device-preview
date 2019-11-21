@@ -29,9 +29,17 @@
 <div id="z-value">5</div>
 <input type="range" min="0" max="360" value="5" class="slider" id="z">
 <div class="code">code</div>
-				<div device="screenshot: screenshot-mobile.png" device-type="mobile"></div>
+				<div style="width: 400px; margin: 0 auto;">
+					<div device="preset: mobile; screenshot: screenshot-mobile.png"></div>
+				</div>
 			</section>
 		</article>
 		<script type="text/javascript" src="../dist/device-preview.min.js"></script>
+		<script type="text/javascript">
+			device_preview.add_preset('mobile', {
+				resolution: '1440:2560'
+			});
+			device_preview.init()
+		</script>
 	</body>
 </html>

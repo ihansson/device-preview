@@ -91,7 +91,8 @@ window["device-preview"] =
 
 let nodes = [],
 	opts = {},
-	events = {};
+	events = {},
+	presets = {};
 
 // Custom events
 
@@ -125,7 +126,7 @@ function remove(node){
 }
 
 // Sets up initial classes on nodes
-function load(node, options){
+function load(node){
 
 	node.device = {
 		screenshot: 'placeholder.png',
@@ -139,20 +140,22 @@ function load(node, options){
 		}
 	}
 
-	if(options){
-		for(opt in options){
-			node.device[opt] = options[opt]
-		}
-	}
+	let preset = presets[node.device.preset]
 
+	let resolution_values = preset.resolution.split(':')
+	let resolution = resolution_values[1] / resolution_values[0]
+
+	node.style.paddingBottom = (resolution * 100)+'%';
 
 	let wrapper = document.createElement("div")
 	wrapper.className = "device-wrapper";
 
-	['top','bottom','left','right','back'].forEach(ex => {
+	['back',,'left','right','top','bottom','corners','front'].forEach(piece => {
+
 		const el = document.createElement("div")
-		el.className = "device-"+ex;
-		if(ex == 'bottom'){
+		el.className = "device-"+piece;
+
+		if(piece == 'bottom'){
 			let speaker = document.createElement("div")
 			speaker.className = "device-speaker";
 			let dots = 4;
@@ -167,7 +170,8 @@ function load(node, options){
 			power.className = "device-power";
 			el.appendChild(power)
 		}
-		if(ex == 'left'){
+
+		if(piece == 'left'){
 			let speaker = document.createElement("div")
 			speaker.className = "device-speaker";
 			let dots = 2;
@@ -179,27 +183,42 @@ function load(node, options){
 			}
 			el.appendChild(speaker)
 		}
-		wrapper.appendChild(el);
-	})
 
-	wrapper.appendChild(corner_el('bottom-left', node.device.corner_resolution));
-	wrapper.appendChild(corner_el('bottom-right', node.device.corner_resolution));
-	wrapper.appendChild(corner_el('top-left', node.device.corner_resolution));
-	wrapper.appendChild(corner_el('top-right', node.device.corner_resolution));
-	wrapper.appendChild(underlay_el());
-	wrapper.appendChild(screenshot_el(node.device.screenshot));
-	let camera = document.createElement("div")
-	camera.className = "device-camera";
-	wrapper.appendChild(camera);
-	wrapper.appendChild(overlay_el());
+		if(piece == 'corners'){
+			['bottom-left','bottom-right','top-left','top-right'].forEach(function(corner){
+				el.appendChild(corner_el(corner, node.device.corner_resolution))
+			})
+		}
+
+		if(piece == 'front'){
+			let underlay = document.createElement("div")
+			underlay.className = "device-underlay";
+			el.appendChild(underlay)
+			let screen = document.createElement("div")
+			screen.className = "device-screen";
+			screen.setAttribute("style", "background-image: url("+node.device.screenshot+")");
+			el.appendChild(screen)
+			let camera = document.createElement("div")
+			camera.className = "device-camera";
+			el.appendChild(camera)
+			let overlay = document.createElement("div")
+			overlay.className = "device-overlay";
+			el.appendChild(overlay)
+		}
+
+		wrapper.appendChild(el);
+
+	})
 
 	let shadow = document.createElement("div")
 	shadow.className = "device-shadow";
 	let shadow_inner = document.createElement("div")
 	shadow_inner.className = "device-shadow-inner";
 	shadow.appendChild(shadow_inner)
+
 	node.appendChild(shadow)
 	node.appendChild(wrapper)
+
 	node.dispatchEvent(events['device/load'])
 
 }
@@ -224,25 +243,6 @@ function corner_el(position, resolution){
 		}
 		_previous_segment = segment
 	}
-	return el;
-}
-
-function screenshot_el(screenshot){
-	const el = document.createElement("div")
-	el.className = "device-screenshot"
-	el.setAttribute("style", "background-image: url("+screenshot+")");
-	return el;
-}
-
-function underlay_el(){
-	const el = document.createElement("div")
-	el.className = "device-underlay"
-	return el;
-}
-
-function overlay_el(){
-	const el = document.createElement("div")
-	el.className = "device-overlay"
 	return el;
 }
 
@@ -273,6 +273,11 @@ function extract_settings(string){
 	return settings;
 }
 
+function add_preset(name, options){
+	options.name = name
+	presets[name] = options
+}
+
 // Bind resize event to update renders
 function bind(){
 	window.addEventListener('resize', update)
@@ -294,15 +299,18 @@ function init(options){
 	bind();
 }
 
-init()
-
-module.exports = {
+const _interface = {
 	add: add,
 	remove: remove,
 	bind: bind,
 	unbind: unbind,
-	init: init
+	init: init,
+	add_preset: add_preset
 };
+
+window.device_preview = _interface;
+
+module.exports = _interface;
 
 
 // TEMP
