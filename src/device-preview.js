@@ -54,21 +54,61 @@ function load(node, options){
 		}
 	}
 
-	['shadow','top','bottom','left','right','back'].forEach(ex => {
+
+	let wrapper = document.createElement("div")
+	wrapper.className = "device-wrapper";
+
+	['top','bottom','left','right','back'].forEach(ex => {
 		const el = document.createElement("div")
 		el.className = "device-"+ex;
-		node.appendChild(el);
+		if(ex == 'bottom'){
+			let speaker = document.createElement("div")
+			speaker.className = "device-speaker";
+			let dots = 4;
+			while(dots){
+				dots--;
+				let dot = document.createElement("div")
+				dot.className = "device-speaker-dot";
+				speaker.appendChild(dot)
+			}
+			el.appendChild(speaker)
+			let power = document.createElement("div")
+			power.className = "device-power";
+			el.appendChild(power)
+		}
+		if(ex == 'left'){
+			let speaker = document.createElement("div")
+			speaker.className = "device-speaker";
+			let dots = 2;
+			while(dots){
+				dots--;
+				let dot = document.createElement("div")
+				dot.className = "device-speaker-dot";
+				speaker.appendChild(dot)
+			}
+			el.appendChild(speaker)
+		}
+		wrapper.appendChild(el);
 	})
-	console.log(node.device)
 
-	node.appendChild(corner_el('bottom-left', node.device.corner_resolution));
-	node.appendChild(corner_el('bottom-right', node.device.corner_resolution));
-	node.appendChild(corner_el('top-left', node.device.corner_resolution));
-	node.appendChild(corner_el('top-right', node.device.corner_resolution));
-	node.appendChild(underlay_el());
-	node.appendChild(screenshot_el(node.device.screenshot));
-	node.appendChild(overlay_el());
+	wrapper.appendChild(corner_el('bottom-left', node.device.corner_resolution));
+	wrapper.appendChild(corner_el('bottom-right', node.device.corner_resolution));
+	wrapper.appendChild(corner_el('top-left', node.device.corner_resolution));
+	wrapper.appendChild(corner_el('top-right', node.device.corner_resolution));
+	wrapper.appendChild(underlay_el());
+	wrapper.appendChild(screenshot_el(node.device.screenshot));
+	let camera = document.createElement("div")
+	camera.className = "device-camera";
+	wrapper.appendChild(camera);
+	wrapper.appendChild(overlay_el());
 
+	let shadow = document.createElement("div")
+	shadow.className = "device-shadow";
+	let shadow_inner = document.createElement("div")
+	shadow_inner.className = "device-shadow-inner";
+	shadow.appendChild(shadow_inner)
+	node.appendChild(shadow)
+	node.appendChild(wrapper)
 	node.dispatchEvent(events['device/load'])
 
 }
@@ -93,7 +133,6 @@ function corner_el(position, resolution){
 		}
 		_previous_segment = segment
 	}
-	console.log(el, resolution)
 	return el;
 }
 
@@ -182,7 +221,10 @@ var range_nodes = document.querySelectorAll('[type=range]')
 range_nodes.forEach(function(node){
 	node.addEventListener('input', function(e){
 		document.querySelector('#'+e.target.attributes.id.nodeValue+'-value').innerHTML = e.target.value
-		nodes.forEach(function(device){
+		document.querySelectorAll('.device-wrapper').forEach(function(device){
+			device.setAttribute("style", "transform: rotateX("+document.getElementById('x').value+"deg) rotateY("+document.getElementById('y').value+"deg) rotateZ("+document.getElementById('z').value+"deg);");
+		})
+		document.querySelectorAll('.device-shadow-inner').forEach(function(device){
 			device.setAttribute("style", "transform: rotateX("+document.getElementById('x').value+"deg) rotateY("+document.getElementById('y').value+"deg) rotateZ("+document.getElementById('z').value+"deg);");
 		})
 	});

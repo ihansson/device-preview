@@ -1,14 +1,8 @@
 $screenshot-offset-mobile: 5px;
 $screen-border-radius-mobile: 12px;
+$screenshot-top-padding-mobile: 30px;
 $screenshot-bottom-padding-mobile: 50px;
-
-$screenshot-offset-tablet: 5px;
-$screen-border-radius-tablet: 12px;
-$screenshot-bottom-padding-tablet: 40px;
-
-$screenshot-offset-desktop: 5px;
-$screen-border-radius-desktop: 12px;
-$screenshot-bottom-padding-desktop: 0;
+$device-thickness: 20px;
 
 * {
     -webkit-transform-style: preserve-3d;
@@ -20,10 +14,14 @@ $screenshot-bottom-padding-desktop: 0;
     perspective: 1200px;   
 }
 
-[device] { 
-    position: relative;
+.device-wrapper { 
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
     // animation: rotate 6s infinite linear;
-    transform: rotateX(25deg ) rotateY(25deg ) rotateZ(5deg);
+    transform: rotateX(37deg ) rotateY(49deg ) rotateZ(5deg);
 }
 
 @keyframes rotate {
@@ -38,18 +36,10 @@ $screenshot-bottom-padding-desktop: 0;
     }
 }
 
-[device-type=desktop] {
-    padding-bottom: 66%;
-}
-
 [device-type=mobile] {
     max-width: 360px;
     margin: 0 auto;
     padding-bottom: 85%;
-}
-
-[device-type=tablet] {
-    padding-bottom: 66%;
 }
 
 .device-screenshot,
@@ -57,38 +47,10 @@ $screenshot-bottom-padding-desktop: 0;
     position: absolute;
 }
 
-[device-type=tablet] {
-    .device-screenshot,
-    .device-overlay {
-        top: $screenshot-offset-tablet;
-        left: $screenshot-offset-tablet;
-        right: $screenshot-offset-tablet;
-        bottom: $screenshot-offset-tablet + $screenshot-bottom-padding-tablet;
-        border-radius: $screen-border-radius-tablet;
-        &:before, &:after {
-            border-radius: $screen-border-radius-tablet;
-        }
-    }
-}
-
-[device-type=desktop] {
-    .device-screenshot,
-    .device-overlay {
-        top: $screenshot-offset-desktop;
-        left: $screenshot-offset-desktop;
-        right: $screenshot-offset-desktop;
-        bottom: $screenshot-offset-desktop + $screenshot-bottom-padding-desktop;
-        border-radius: $screen-border-radius-desktop;
-        &:before, &:after {
-            border-radius: $screen-border-radius-desktop;
-        }
-    }
-}
-
 [device-type=mobile] {
     .device-screenshot,
     .device-overlay {
-        top: $screenshot-offset-mobile;
+        top: $screenshot-offset-mobile + $screenshot-top-padding-mobile;
         left: $screenshot-offset-mobile;
         right: $screenshot-offset-mobile;
         bottom: $screenshot-offset-mobile + $screenshot-bottom-padding-mobile;
@@ -132,16 +94,22 @@ $screenshot-bottom-padding-desktop: 0;
 .device-underlay {
     background-color: #5d4257;
     background-image: linear-gradient(315deg, #5d4257 0%, #a5c7b7 74%);
-}
-
-[device-type=desktop] {
-    .device-underlay {
-        border-radius: $screen-border-radius-desktop;
+    border-radius: $screen-border-radius-mobile;
+    &:before {
+        content: '';
+        display: block;
+        position: absolute;
+        top: -1px;
+        left: -1px;
+        bottom: -1px;
+        right: -1px;
+        position: absolute;
+        border-radius: $screen-border-radius-mobile / 2;
+        border-bottom: 2px solid rgba(255,255,255,0.2);
     }
 }
-
-[device-type=mobile],
-[device-type=tablet] {
+  
+[device-type=mobile] {
     .device-underlay {
         border-radius: $screen-border-radius-mobile;
         &:after {
@@ -158,24 +126,11 @@ $screenshot-bottom-padding-desktop: 0;
     }
 }
 
-[device-type=tablet] {
-    .device-underlay {
-        border-radius: $screen-border-radius-tablet;
-        &:after {
-            bottom: $screenshot-offset-tablet;
-            width: $screenshot-bottom-padding-tablet - $screenshot-offset-tablet;
-            height: $screenshot-bottom-padding-tablet - $screenshot-offset-tablet;
-        }
-    }
-}
-
 [device] {
     * {
         opacity: 1;
     }
 }
-
-$device-thickness: 12px;
 
 .device-back {
     position: absolute;
@@ -184,7 +139,7 @@ $device-thickness: 12px;
     background-color: #5d4257;
     background-image: linear-gradient(315deg, #5d4257 0%, #a5c7b7 74%);
     transform: translate3d(0,0,-$device-thickness);
-    border-radius: $screen-border-radius-tablet;
+    border-radius: $screen-border-radius-mobile;
 }
 
 .device-left,
@@ -202,8 +157,8 @@ $device-thickness: 12px;
 
 .device-left,
 .device-right {
-    top: $screen-border-radius-tablet / 2;
-    bottom: $screen-border-radius-tablet / 2;
+    top: $screen-border-radius-mobile / 2;
+    bottom: $screen-border-radius-mobile / 2;
     left: 0;
     width: $device-thickness;
     transform: rotateY(270deg) translate3d(($device-thickness / 2) * -1, 0, ($device-thickness / 2))
@@ -218,8 +173,8 @@ $device-thickness: 12px;
 .device-top,
 .device-bottom {
     top: 0;
-    left: $screen-border-radius-tablet / 2;
-    right: $screen-border-radius-tablet / 2;
+    left: $screen-border-radius-mobile / 2;
+    right: $screen-border-radius-mobile / 2;
     height: $device-thickness;
     transform: rotateX(90deg) translate3d(0, ($device-thickness / 2) * -1, ($device-thickness / 2))
 }
@@ -232,13 +187,13 @@ $device-thickness: 12px;
 
 .device-corner {
     position: absolute;
-    width: $screen-border-radius-tablet;
+    width: $screen-border-radius-mobile;
     height: $device-thickness;
     opacity: 1;
     &.bottom-left {
         bottom: 0;
         left: 0;
-        transform: rotateX(90deg) rotateY(180deg) translate3d(-7px, -6px, 6px);
+        transform: rotateX(90deg) rotateY(180deg) translate3d(-7px, ($device-thickness / 2) * -1, 10px);
         .device-corner-segment { 
             background: #a5c7b7;
         }
@@ -246,7 +201,7 @@ $device-thickness: 12px;
     &.bottom-right {
         bottom: 0;
         right: 0;
-        transform: rotateX(90deg) rotateY(90deg) translate3d(-7px, -6px, 6px);
+        transform: rotateX(90deg) rotateY(90deg) translate3d(-7px, ($device-thickness / 2) * -1, 6px);
         .device-corner-segment { 
             background: #5d4257;
         }
@@ -254,7 +209,7 @@ $device-thickness: 12px;
     &.top-left {
         top: 0;
         left: 0;
-        transform: rotateX(90deg) rotateY(270deg) translate3d(-7px, -6px, 6px);
+        transform: rotateX(90deg) rotateY(270deg) translate3d(-7px, ($device-thickness / 2) * -1, 6px);
         .device-corner-segment { 
             background: #a5c7b7;
         }
@@ -262,7 +217,7 @@ $device-thickness: 12px;
     &.top-right {
         top: 0;
         right: 0;
-        transform: rotateX(90deg) rotateY(0) translate3d(-7px, -6px, 6px);
+        transform: rotateX(90deg) rotateY(0) translate3d(-7px, ($device-thickness / 2) * -1, 6px);
         .device-corner-segment { 
             background: #a5c7b7;
         }
@@ -277,6 +232,15 @@ $device-thickness: 12px;
 }
 
 .device-shadow {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    transform:  translate3d(-120px, 120px, -400px);
+}
+
+.device-shadow-inner {
     background: black;
     position: absolute;
     top: 0;
@@ -284,6 +248,60 @@ $device-thickness: 12px;
     bottom: 0;
     right: 0;
     opacity: 0.5;
-    filter: blur(12px);
-    transform:  translate3d(0, 0, -200px);
+    filter: blur(15px);
+    transform: rotateX(37deg ) rotateY(49deg ) rotateZ(5deg);
+}
+
+.device-speaker {
+    position: absolute;
+    top: 50%;
+    left: 10%;
+    bottom: 0;
+    height: 6px;
+    transform: translateY(-50%);
+}
+
+.device-speaker-dot {
+    float: left;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    margin: 0 4px 0 0;
+    background: linear-gradient(45deg, rgba(0,0,0,0.5) 0%, rgba(25,25,25,0.75) 100%);
+}
+
+.device-left {
+    .device-speaker {
+        top: auto;
+        left: 50%;
+        bottom: 12%;
+        transform: translateX(-50%);
+    }
+    .device-speaker-dot {
+        float: none;
+        margin: 4px 0 0 0;
+    }
+}
+
+.device-power {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    bottom: 0;
+    height: 8px;
+    width: 35px;
+    background: linear-gradient(45deg, rgba(0,0,0,0.5) 0%, rgba(25,25,25,0.75) 100%);
+    transform: translate(-50%, -50%);
+    border-radius: 3px;
+}
+
+.device-camera {
+    position: absolute;
+    top: ($screenshot-offset-mobile + $screenshot-top-padding-mobile) / 2;
+    left: 50%;
+    height: 22px;
+    width: 22px;
+    background: linear-gradient(45deg, rgba(0,0,0,0.25) 0%, rgba(25,25,25,0.5) 100%);
+    transform: translate(-50%, -50%);
+    border-radius: 50%;
 }
