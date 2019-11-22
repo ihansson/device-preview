@@ -39,7 +39,7 @@ function load(node){
 
 	node.device = {
 		screenshot: 'placeholder.png',
-		corner_resolution: 5
+		corner_resolution: 10
 	}
 
 	if(node.attributes.device){
@@ -100,9 +100,6 @@ function load(node){
 		}
 
 		if(piece == 'front'){
-			let underlay = document.createElement("div")
-			underlay.className = "device-underlay";
-			el.appendChild(underlay)
 			let screen = document.createElement("div")
 			screen.className = "device-screen";
 			screen.setAttribute("style", "background-image: url("+node.device.screenshot+")");
@@ -125,6 +122,7 @@ function load(node){
 	shadow_inner.className = "device-shadow-inner";
 	shadow.appendChild(shadow_inner)
 
+	node.className = 'device'
 	node.appendChild(shadow)
 	node.appendChild(wrapper)
 
@@ -139,7 +137,7 @@ function corner_el(position, resolution){
 	el.className = "device-corner "+position
 	let _previous_segment
 	let rotation_per_segment = 90 / resolution;
-	let width = 12 / resolution;
+	let width = 30 / resolution; // CHANGE THIS TO BORDER RADIUS * 1.5
 	while(resolution){
 		resolution--;
 		let segment = document.createElement("div")
