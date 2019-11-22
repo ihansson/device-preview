@@ -14,8 +14,8 @@
 
     --border-radius: 20px;
 
-    --front-top-offset: 25px;
-    --front-bottom-offset: 50px;
+    --front-top-offset: 35px;
+    --front-bottom-offset: 70px;
 
     --screen-offset: 5px;
     --screen-border-radius: 6px;
@@ -84,13 +84,18 @@
 // Top Right Bottom Left
 
 .device-right,
-.device-top,
-.device-bottom {
+.device-left {
     @include gradient(315);
 }
 
-.device-left {
-    background: var(--color-b);
+.device-bottom {
+    background-color: var(--color-a);
+    background-image: linear-gradient(315deg, var(--color-a) 0%, var(--color-b) 50%, var(--color-a) 100%);
+}
+
+.device-top {
+    background-color: var(--color-a);
+    background-image: linear-gradient(315deg, var(--color-b) 0%, var(--color-a) 50%, var(--color-b) 100%);
 }
 
 .device-left,
@@ -98,7 +103,7 @@
     top: var(--border-radius);
     bottom: var(--border-radius);
     left: 0;
-    width: var(--thickness);
+    width: calc(var(--thickness) + 1px);
     transform: rotateY(270deg) translateX(calc((var(--thickness) / 2) * -1)) translateY(0) translateZ(calc(var(--thickness) / 2));
 }
 
@@ -113,7 +118,7 @@
     top: 0;
     left: var(--border-radius);
     right: var(--border-radius);
-    height: var(--thickness);
+    height: calc(var(--thickness) + 1px);
     transform: rotateX(90deg) translateX(0) translateY(calc((var(--thickness) / 2) * -1)) translateZ(calc((var(--thickness) / 2)));
 }
 
@@ -131,7 +136,7 @@
 
 .device-corner {
     width: var(--border-radius);
-    height: var(--thickness);
+    height: calc(var(--thickness) + 1px);
     opacity: 1;
     .device-corner-segment {
         left: 100%;
@@ -143,7 +148,7 @@
         left: var(--border-radius);
         @include corner_transform(90, 180);
         .device-corner-segment { 
-            background: var(--color-b);
+            background: var(--color-a);
         }
     }
     &.bottom-right {
@@ -188,12 +193,38 @@
 
 // Gizmos
 
-.device-speaker {
+.device-gizmo-top-left {
+    top: 12px;
+    left: 12px;
+}
+
+.device-gizmo-top-right {
+    top: 12px;
+    right: 12px;
+}
+
+.device-gizmo-bottom-center {
+    bottom: 12px;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.device-gizmo-center {
     top: 50%;
-    left: 10%;
-    bottom: 0;
-    height: 6px;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.device-gizmo-left {
+    top: 50%;
+    left: 5%;
     transform: translateY(-50%);
+}
+
+.device-gizmo-bottom {
+    left: 50%;
+    bottom: 5%;
+    transform: translateX(-50%);
 }
 
 .device-speaker-dot {
@@ -206,13 +237,8 @@
     background: linear-gradient(45deg, rgba(0,0,0,0.5) 0%, rgba(25,25,25,0.75) 100%);
 }
 
-.device-left {
-    .device-speaker {
-        top: auto;
-        left: 50%;
-        bottom: 12%;
-        transform: translateX(-50%);
-    }
+.device-left,
+.device-right {
     .device-speaker-dot {
         float: none;
         margin: 4px 0 0 0;
@@ -220,22 +246,23 @@
 }
 
 .device-power {
-    top: 50%;
-    left: 50%;
     bottom: 0;
     height: 8px;
     width: 35px;
     background: linear-gradient(45deg, rgba(0,0,0,0.5) 0%, rgba(25,25,25,0.75) 100%);
-    transform: translate(-50%, -50%);
     border-radius: 3px;
 }
 
 .device-camera {
-    top: 5px;
-    left: 50%;
     height: 22px;
     width: 22px;
     background: linear-gradient(45deg, rgba(0,0,0,0.25) 0%, rgba(25,25,25,0.5) 100%);
-    transform: translate(-50%, -50%);
+    border-radius: 50%;
+}
+
+.device-button {
+    height: 55px;
+    width: 55px;
+    background: linear-gradient(45deg, rgba(0,0,0,0.25) 0%, rgba(25,25,25,0.5) 100%);
     border-radius: 50%;
 }

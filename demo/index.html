@@ -37,7 +37,28 @@
 		<script type="text/javascript" src="../dist/device-preview.min.js"></script>
 		<script type="text/javascript">
 			device_preview.add_preset('mobile', {
-				resolution: '1440:2560'
+				resolution: '1440:2560',
+				corner_resolution: 13,
+				styles: {
+					// 'color-a': 'green',
+					// 'color-b': 'pink',
+					'color-a': '#fff',
+					'color-b': 'pink'
+				},
+				gizmos: {
+					bottom: [
+						{ type: 'speaker', position: 'left', dots: 4 },
+						{ type: 'power', position: 'center' }
+					],
+					left: [
+						{ type: 'speaker', position: 'bottom', dots: 2 }
+					],
+					front: [
+						{ type: 'button', position: 'bottom-center' },
+						{ type: 'camera', position: 'top-left' },
+						{ type: 'html', position: 'top-right', content: '<div style="right: 0; width: 130px;">Device Preview</div>' }
+					]
+				}
 			});
 			device_preview.init()
 		</script>

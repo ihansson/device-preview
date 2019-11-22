@@ -39,7 +39,6 @@ function load(node){
 
 	node.device = {
 		screenshot: 'placeholder.png',
-		corner_resolution: 10
 	}
 
 	if(node.attributes.device){
@@ -50,11 +49,19 @@ function load(node){
 	}
 
 	let preset = presets[node.device.preset]
+	if(!preset.gizmos) preset.gizmos = {}
 
 	let resolution_values = preset.resolution.split(':')
 	let resolution = resolution_values[1] / resolution_values[0]
 
 	node.style.paddingBottom = (resolution * 100)+'%';
+	node.style['--color-a'] = 'green';
+
+	let style_string = 'padding-bottom:'+(resolution * 100)+'%;';
+	if(preset.styles) Object.keys(preset.styles).forEach(function(key){
+		style_string += '--'+key+': '+preset.styles[key]+';';
+	})
+	node.setAttribute("style", style_string);
 
 	let wrapper = document.createElement("div")
 	wrapper.className = "device-wrapper";
@@ -64,38 +71,28 @@ function load(node){
 		const el = document.createElement("div")
 		el.className = "device-"+piece;
 
-		if(piece == 'bottom'){
-			let speaker = document.createElement("div")
-			speaker.className = "device-speaker";
-			let dots = 4;
-			while(dots){
-				dots--;
-				let dot = document.createElement("div")
-				dot.className = "device-speaker-dot";
-				speaker.appendChild(dot)
-			}
-			el.appendChild(speaker)
-			let power = document.createElement("div")
-			power.className = "device-power";
-			el.appendChild(power)
-		}
-
-		if(piece == 'left'){
-			let speaker = document.createElement("div")
-			speaker.className = "device-speaker";
-			let dots = 2;
-			while(dots){
-				dots--;
-				let dot = document.createElement("div")
-				dot.className = "device-speaker-dot";
-				speaker.appendChild(dot)
-			}
-			el.appendChild(speaker)
+		if(preset.gizmos[piece]){
+			preset.gizmos[piece].forEach(function(gizmo) {
+				let gizmo_el = document.createElement("div")
+				gizmo_el.className = "device-gizmo device-gizmo-"+gizmo.position+" device-"+gizmo.type;
+				if(gizmo.type == 'speaker'){
+					while(gizmo.dots){
+						gizmo.dots--;
+						let dot = document.createElement("div")
+						dot.className = "device-speaker-dot";
+						gizmo_el.appendChild(dot)
+					}
+				}
+				if(gizmo.type == 'html'){
+					gizmo_el.innerHTML = gizmo.content
+				}
+				el.appendChild(gizmo_el)
+			})
 		}
 
 		if(piece == 'corners'){
 			['bottom-left','bottom-right','top-left','top-right'].forEach(function(corner){
-				el.appendChild(corner_el(corner, node.device.corner_resolution))
+				el.appendChild(corner_el(corner, preset.corner_resolution))
 			})
 		}
 
@@ -104,12 +101,6 @@ function load(node){
 			screen.className = "device-screen";
 			screen.setAttribute("style", "background-image: url("+node.device.screenshot+")");
 			el.appendChild(screen)
-			let camera = document.createElement("div")
-			camera.className = "device-camera";
-			el.appendChild(camera)
-			let overlay = document.createElement("div")
-			overlay.className = "device-overlay";
-			el.appendChild(overlay)
 		}
 
 		wrapper.appendChild(el);
