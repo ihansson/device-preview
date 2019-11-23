@@ -91,24 +91,8 @@ window["device-preview"] =
 
 let nodes = [],
 	opts = {},
-	events = {},
 	presets = {};
 
-// Custom events
-
-const event_names = ['device/load', 'device/remove', 'device/update'];
-for(ev in event_names){
-	let event = document.createEvent('Event');
-	event.initEvent(event_names[ev], true, true);
-	events[event_names[ev]] = event;
-}
-
-// Update options
-function configure(_opts){
-	for(opt in _opts){
-		opts[opt] = _opts[opt]
-	}
-}
 
 // Setup before first update
 function add(selector, options){
@@ -120,7 +104,6 @@ function add(selector, options){
 
 // Remove node from list to update
 function remove(node){
-	node.dispatchEvent(events['device/remove'])
 	if(node.device.timeout) window.clearTimeout(node.device.timeout)
 	nodes = nodes.filter(function(_node){ return _node !== node})
 }
@@ -129,7 +112,7 @@ function remove(node){
 function load(node){
 
 	node.device = {
-		screenshot: 'placeholder.png',
+		type: 'html',
 	}
 
 	if(node.attributes.device){
@@ -140,15 +123,17 @@ function load(node){
 	}
 
 	let preset = presets[node.device.preset]
+
+	node.device.preset = preset;
+
 	if(!preset.gizmos) preset.gizmos = {}
 
 	let resolution_values = preset.resolution.split(':')
 	let resolution = resolution_values[1] / resolution_values[0]
 
-	node.style.paddingBottom = (resolution * 100)+'%';
-	node.style['--color-a'] = 'green';
+	let html = node.innerHTML;
 
-	let style_string = 'padding-bottom:'+(resolution * 100)+'%;';
+	let style_string = 'padding-bottom: '+(resolution * 100)+'%;';
 	if(preset.styles) Object.keys(preset.styles).forEach(function(key){
 		style_string += '--'+key+': '+preset.styles[key]+';';
 	})
@@ -190,7 +175,15 @@ function load(node){
 		if(piece == 'front'){
 			let screen = document.createElement("div")
 			screen.className = "device-screen";
-			screen.setAttribute("style", "background-image: url("+node.device.screenshot+")");
+			if(node.device.image){
+				screen.setAttribute("style", "background-image: url("+node.device.image+")");
+			} else if(node.device.video){
+				screen.innerHTML = '<video class="device-screen-video" autoplay muted loop><source src="'+node.device.video+'" type="video/mp4"></video>';
+			} else if(node.device.iframe){
+				screen.innerHTML = '<iframe class="device-screen-iframe" src="'+node.device.iframe+'""></iframe>';
+			} else {
+				screen.innerHTML = html;
+			}
 			el.appendChild(screen)
 		}
 
@@ -204,11 +197,18 @@ function load(node){
 	shadow_inner.className = "device-shadow-inner";
 	shadow.appendChild(shadow_inner)
 
+	node.innerHTML = '';
 	node.className = 'device'
-	node.appendChild(shadow)
-	node.appendChild(wrapper)
 
-	node.dispatchEvent(events['device/load'])
+	let scalar = document.createElement("div")
+	scalar.className = "device-scalar";
+	scalar.setAttribute("style", 'width: '+preset.width_basis+'px; height: '+(resolution * preset.width_basis)+'px;');
+	scalar.appendChild(shadow)
+	scalar.appendChild(wrapper)
+	node.device.scalar = scalar
+
+	node.appendChild(scalar)
+	resize(node)
 
 }
 
@@ -238,12 +238,14 @@ function corner_el(position, resolution){
 // Update all nodes
 function update(){
 	let _nodes = nodes;
-	for(i in _nodes) render(_nodes[i])
+	for(i in _nodes) resize(_nodes[i])
 }
 
 // Render device
-function render(node){
-	node.dispatchEvent(events['device/update'])
+function resize(node){
+	let width = node.device.preset.width_basis;
+	let parent_width = node.parentNode.offsetWidth;
+	node.device.scalar.style.transform = "scale("+(parent_width / width)+")"
 }
 
 // Extracts setting values
@@ -251,7 +253,7 @@ function extract_settings(string){
 	let settings = {};
 	if(!string) return settings;
 	string.split(';').forEach(function(setting){
-		let arr = setting.trim().split(':')
+		let arr = setting.trim().split(/:(.+)/)
 		if(!arr[0]) return;
 		let key = arr[0].trim();
 		let value = arr[1] ? arr[1].trim() : true;

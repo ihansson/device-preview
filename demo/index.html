@@ -29,8 +29,18 @@
 <div id="z-value">5</div>
 <input type="range" min="0" max="360" value="5" class="slider" id="z">
 <div class="code">code</div>
+				<div style="max-width: 800px; margin: 250px auto;">
+					<div device="preset: tablet; image: screenshot.png"></div>
+				</div>
 				<div style="width: 400px; margin: 0 auto;">
-					<div device="preset: mobile; screenshot: screenshot-mobile.png"></div>
+					<div device="preset: mobile; image: screenshot-mobile.png"></div>
+					<!--
+					<div device="preset: mobile; video: video.mp4"></div>
+					<div device="preset: mobile; iframe: http://example.com/"></div>
+					<div device="preset: mobile;">
+						<h6>HTML Content</h6>
+					</div>
+					-->
 				</div>
 			</section>
 		</article>
@@ -39,11 +49,10 @@
 			device_preview.add_preset('mobile', {
 				resolution: '1440:2560',
 				corner_resolution: 13,
+				width_basis: 400,
 				styles: {
-					// 'color-a': 'green',
-					// 'color-b': 'pink',
-					'color-a': '#fff',
-					'color-b': 'pink'
+					'color-a': '#e1e8eb',
+					'color-b': '#a4b7bf'
 				},
 				gizmos: {
 					bottom: [
@@ -57,6 +66,28 @@
 						{ type: 'button', position: 'bottom-center' },
 						{ type: 'camera', position: 'top-left' },
 						{ type: 'html', position: 'top-right', content: '<div style="right: 0; width: 130px;">Device Preview</div>' }
+					]
+				}
+			});
+			device_preview.add_preset('tablet', {
+				resolution: '1600:1100',
+				corner_resolution: 13,
+				width_basis: 1200,
+				styles: {
+					'color-a': '#e1e8eb',
+					'color-b': '#a4b7bf',
+					'front-top-offset': '0px',
+					'front-bottom-offset': '0px',
+					'border-radius': '20px',
+					'screen-border-radius': '20px'
+				},
+				gizmos: {
+					bottom: [
+						{ type: 'speaker', position: 'left', dots: 4 },
+						{ type: 'power', position: 'center' }
+					],
+					left: [
+						{ type: 'speaker', position: 'bottom', dots: 2 }
 					]
 				}
 			});

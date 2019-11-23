@@ -2,7 +2,7 @@
 
 @mixin gradient($dir) {
     background-color: var(--color-a);
-    background-image: linear-gradient(#{$dir}deg, var(--color-a) 0%, var(--color-b) 74%);
+    background-image: linear-gradient(#{$dir}deg, var(--color-a) 0%, var(--color-b) 100%);
 }
 
 // Variable Scope
@@ -28,11 +28,18 @@
 
     perspective: 1200px;  
     position: relative;
+
     * {
         -webkit-transform-style: preserve-3d;
         transform-style: preserve-3d;
         position: absolute;
     }
+}
+
+// Scale Controller
+
+.device-scalar {
+    transform-origin: top left;
 }
 
 // Rotation
@@ -50,7 +57,8 @@
 .device-back,
 .device-corners,
 .device-shadow,
-.device-shadow-inner { 
+.device-shadow-inner,
+.device-screen-iframe { 
     top: 0;
     left: 0;
     bottom: 0;
@@ -73,12 +81,25 @@
 // Screen
 
 .device-screen {
+    overflow: hidden;
     background-size: 100%;
     top: calc(var(--front-top-offset) + var(--screen-offset));
     left: var(--screen-offset);
     right: var(--screen-offset);
     bottom: calc(var(--front-bottom-offset) + var(--screen-offset));
     border-radius: var(--screen-border-radius);
+}
+
+.device-screen-iframe {
+    width: 100%;
+    height: 100%;
+}
+
+.device-screen-video {
+    top: 50%;
+    left: 50%;
+    height: 100%;
+    transform: translate(-50%, -50%);
 }
 
 // Top Right Bottom Left
@@ -180,7 +201,7 @@
 // Shadow
 
 .device-shadow {
-    transform: translate3d(-90px, 170px, -500px) scale(1.1);
+    transform: translate3d(-180px, 170px, -500px) scale(1.1);
 }
 
 .device-shadow-inner {
