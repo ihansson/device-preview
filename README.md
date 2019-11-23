@@ -6,15 +6,13 @@ Render device previews with perspective from flat images
 
 @todo for 0.1
 
-- Base keyframe animations
-- Redo corners to work with thickness
-- Add jack gizmo
-- Make gizmos look better
-- Make gizmos work with sizing properly
 - Add default presets
-- Some browser testing / Device testing
+
+- Redo corners to work with thickness
 
 - Improve styles
 - Improve codebase
+
+- Some browser testing / Device testing
 
 - Make nice demo page

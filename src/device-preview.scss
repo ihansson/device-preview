@@ -26,7 +26,10 @@
 
     --thickness: 30px;
 
-    perspective: 1200px;  
+    --perspective-multiplier: 3;
+    --device-width: 400px;
+
+    perspective: calc(var(--device-width) * var(--perspective-multiplier)); 
     position: relative;
 
     * {
@@ -37,7 +40,6 @@
 }
 
 // Scale Controller
-
 .device-scalar {
     transform-origin: top left;
 }
@@ -201,33 +203,35 @@
 // Shadow
 
 .device-shadow {
-    transform: translate3d(-180px, 170px, -500px) scale(1.1);
+    transform: translate3d(calc((var(--device-width) / 4) * -1), calc(var(--device-width) / 4), calc(var(--device-width) * -1)) scale(1.1);
 }
 
 .device-shadow-inner {
     opacity: 1;
     background: black;
-    box-shadow: 0 0 25px 35px rgba(0,0,0,1);
-    opacity: 0.35;
+    opacity: 0.25;
+    box-shadow: 0 0 calc(var(--device-width) / 20) calc(var(--device-width) / 15) rgba(0,0,0,1);
     border-radius: calc(var(--border-radius) / 2);
 }
 
-// Gizmos
+// Gizmo Positions
 
 .device-gizmo-top-left {
-    top: 12px;
-    left: 12px;
+    top: calc((var(--front-top-offset) / 2) + var(--screen-offset));
+    left: 4%;
+    transform: translateY(-50%);
 }
 
 .device-gizmo-top-right {
-    top: 12px;
-    right: 12px;
+    top: calc((var(--front-top-offset) / 2) + var(--screen-offset));
+    right: 4%;
+    transform: translateY(-50%);
 }
 
 .device-gizmo-bottom-center {
-    bottom: 12px;
+    bottom: calc((var(--front-bottom-offset) / 2) + var(--screen-offset));
     left: 50%;
-    transform: translateX(-50%);
+    transform: translate(-50%, 50%);
 }
 
 .device-gizmo-center {
@@ -242,48 +246,174 @@
     transform: translateY(-50%);
 }
 
+.device-gizmo-right {
+    top: 50%;
+    right: 5%;
+    transform: translateY(-50%);
+}
+
 .device-gizmo-bottom {
     left: 50%;
     bottom: 5%;
     transform: translateX(-50%);
 }
 
+// Gizmo Speaker
+
 .device-speaker-dot {
     position: static;
     float: left;
-    width: 6px;
-    height: 6px;
+    width: calc(var(--thickness) / 4.5);
+    height: calc(var(--thickness) / 4.5);
     border-radius: 50%;
-    margin: 0 4px 0 0;
-    background: linear-gradient(45deg, rgba(0,0,0,0.5) 0%, rgba(25,25,25,0.75) 100%);
+    margin: 0 calc(var(--thickness) / 6) 0 0;
+    background: linear-gradient(45deg, rgba(0,0,0,0.65) 0%, rgba(0,0,0,0.75) 100%);
+    border-left: 2px solid rgba(255,255,255,0.05);
+    border-bottom: 2px solid rgba(255,255,255,0.075);
 }
 
 .device-left,
 .device-right {
     .device-speaker-dot {
         float: none;
-        margin: 4px 0 0 0;
+        margin: calc(var(--thickness) / 6) 0 0 0;
     }
 }
 
+// Gizmo Power
+
 .device-power {
     bottom: 0;
-    height: 8px;
-    width: 35px;
-    background: linear-gradient(45deg, rgba(0,0,0,0.5) 0%, rgba(25,25,25,0.75) 100%);
-    border-radius: 3px;
+    width: calc(var(--thickness) * 1.5);
+    height: calc(var(--thickness) / 2.75);
+    background: linear-gradient(45deg, rgba(0,0,0,0.65) 0%, rgba(0,0,0,0.75) 100%);
+    border-radius: calc(var(--thickness) / 2);
+    border-left: 2px solid rgba(255,255,255,0.05);
+    border-bottom: 2px solid rgba(255,255,255,0.075);
 }
+
+// Gizmo Camera
 
 .device-camera {
-    height: 22px;
-    width: 22px;
-    background: linear-gradient(45deg, rgba(0,0,0,0.25) 0%, rgba(25,25,25,0.5) 100%);
+    width: calc(var(--front-top-offset) / 1.75);
+    height: calc(var(--front-top-offset) / 1.75);
+    background: linear-gradient(45deg, rgba(0,0,0,0.25) 0%, rgba(0,0,0,0.65) 100%);
     border-radius: 50%;
+    border-top: 2px solid rgba(255,255,255,0.1);
+    border-bottom: 2px solid rgba(255,255,255,0.075);
+    &:after {
+        content: '';
+        position: absolute;
+        top: 2px;
+        left: 2px;
+        right: 2px;
+        bottom: 2px;
+        background: linear-gradient(45deg, rgba(242,246,248,0.5) 0%, rgba(216,225,231,0.5) 50%, rgba(181,198,208,1) 51%, rgba(224,239,249,1) 100%);
+        opacity: 0.05;
+        border-radius: 50%;
+    }
+    &:before {
+        content: '';
+        position: absolute;
+        top: 22%;
+        left: 22%;
+        width: 7px;
+        height: 7px;
+        background: white;
+        border-radius: 50%;
+        opacity: 0.05;
+    }
 }
 
+// Gizmo Button
+
 .device-button {
-    height: 55px;
-    width: 55px;
-    background: linear-gradient(45deg, rgba(0,0,0,0.25) 0%, rgba(25,25,25,0.5) 100%);
+    width: calc(var(--front-bottom-offset) / 1.25);
+    height: calc(var(--front-bottom-offset) / 1.25);
+    background: linear-gradient(45deg, rgba(0,0,0,0.15) 0%, rgba(0,0,0,0.35) 100%);
     border-radius: 50%;
+    border-left: 2px solid rgba(255,255,255,0.05);
+    border-bottom: 2px solid rgba(255,255,255,0.075);
+}
+
+// Gizmo Jack
+
+.device-jack {
+    width: calc(var(--thickness) / 2);
+    height: calc(var(--thickness) / 2);
+    background: linear-gradient(45deg, rgba(0,0,0,0.25) 0%, rgba(0,0,0,0.75) 100%);
+    border-radius: 50%;
+    border-left: 2px solid rgba(255,255,255,0.1);
+}
+
+// Animation
+
+@keyframes device-wobble {
+    0 { transform: rotateX(var(--rotate-x)) rotateY(var(--rotate-y)) rotateZ(var(--rotate-z)); }
+    33% { transform: rotateX(calc(var(--rotate-x) - 1deg)) rotateY(calc(var(--rotate-y) + 1deg)) rotateZ(calc(var(--rotate-z) - 1deg)); }
+    66% { transform: rotateX(calc(var(--rotate-x) + 1deg)) rotateY(calc(var(--rotate-y) - 1deg)) rotateZ(calc(var(--rotate-z) + 1deg)); }
+    100% { transform: rotateX(var(--rotate-x)) rotateY(var(--rotate-y)) rotateZ(var(--rotate-z)); }
+}
+
+.device-wobble {
+    .device-wrapper,
+    .device-shadow-inner {
+        animation: device-wobble 8s infinite;
+    }
+}
+
+@keyframes device-turn {
+    0% { transform: rotateX(0) rotateY(0) rotateZ(0); }
+    20% { transform: rotateX(var(--rotate-x)) rotateY(var(--rotate-y)) rotateZ(var(--rotate-z)); }
+    80% { transform: rotateX(var(--rotate-x)) rotateY(var(--rotate-y)) rotateZ(var(--rotate-z)); }
+    100% { transform: rotateX(0) rotateY(0) rotateZ(0); }
+}
+
+@keyframes device-turn-shadow {
+    0% { transform: translate3d(0, 0, calc(var(--device-width) * -1)) scale(0.8); }
+    20% { transform: translate3d(calc((var(--device-width) / 4) * -1), calc(var(--device-width) / 4), calc(var(--device-width) * -1)) scale(1.1); }
+    80% { transform: translate3d(calc((var(--device-width) / 4) * -1), calc(var(--device-width) / 4), calc(var(--device-width) * -1)) scale(1.1); }
+    100% { transform: translate3d(0, 0, calc(var(--device-width) * -1)) scale(0.8); }
+}
+
+.device-turn {
+    .device-wrapper,
+    .device-shadow-inner {
+        animation: device-turn 4.5s infinite;
+    }
+    .device-shadow {
+        animation: device-turn-shadow 4.5s infinite;
+    }
+}
+
+@keyframes device-showcase {
+    0% { transform: rotateX(0) rotateY(0) rotateZ(0); }
+    25% { transform: rotateX(40deg) rotateY(40deg) rotateZ(0deg); }
+    45% { transform: rotateX(65deg) rotateY(35deg) rotateZ(5deg); }
+    60% { transform: rotateX(50deg) rotateY(-50deg) rotateZ(10deg); }
+    80% { transform: rotateX(-50deg) rotateY(-50deg) rotateZ(10deg); }
+    100% { transform: rotateX(0) rotateY(0) rotateZ(0); }
+}
+
+@keyframes device-showcase-shadow {
+    0% { transform: translate3d(0, 0, calc(var(--device-width) * -1)) scale(0.8); }
+    25% { transform: translate3d(calc((var(--device-width) / 4) * -1), calc(var(--device-width) / 4), calc(var(--device-width) * -1)) scale(1.1); }
+    45% { transform: translate3d(calc((var(--device-width) / 4) * -1), calc(var(--device-width) / 4), calc(var(--device-width) * -1)) scale(1.1); }
+    60% { transform: translate3d(calc((var(--device-width) / 4) * 1), calc(var(--device-width) / 4), calc(var(--device-width) * -1)) scale(1.1); }
+    80% { transform: translate3d(calc((var(--device-width) / 4) * 1), calc((var(--device-width) / 4) * -1), calc(var(--device-width) * -1)) scale(1.1); }
+    100% { transform: translate3d(0, 0, calc(var(--device-width) * -1)) scale(0.8);; }
+}
+
+.device-showcase {
+    .device-wrapper,
+    .device-shadow-inner {
+        transform: rotateX(0) rotateY(0) rotateZ(0);
+        animation: device-showcase 12s infinite;
+        animation-delay: 1.5s;
+    }
+    .device-shadow {
+        transform: translate3d(0, 0, calc(var(--device-width) * -1)) scale(0.8);
+        animation: device-showcase-shadow 12s infinite;
+        animation-delay: 1.5s;
+    }
 }

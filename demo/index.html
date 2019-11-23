@@ -29,11 +29,17 @@
 <div id="z-value">5</div>
 <input type="range" min="0" max="360" value="5" class="slider" id="z">
 <div class="code">code</div>
-				<div style="max-width: 800px; margin: 250px auto;">
-					<div device="preset: tablet; image: screenshot.png"></div>
+				<div style="width: 400px; margin: 100px auto;">
+					<div device="preset: mobile-2; image: screenshot-mobile.png;"></div>
 				</div>
-				<div style="width: 400px; margin: 0 auto;">
-					<div device="preset: mobile; image: screenshot-mobile.png"></div>
+				<div style="width: 400px; margin: 100px auto;">
+					<div device="preset: mobile; image: screenshot-mobile.png; animation: device-wobble"></div>
+				</div>
+				<div style="width: 400px; margin: 100px auto;">
+					<div device="preset: mobile-2; image: screenshot-mobile.png; animation: device-turn"></div>
+				</div>
+				<div style="width: 400px; margin: 100px auto;">
+					<div device="preset: mobile-2; image: screenshot-mobile.png; animation: device-showcase"></div>
 					<!--
 					<div device="preset: mobile; video: video.mp4"></div>
 					<div device="preset: mobile; iframe: http://example.com/"></div>
@@ -49,15 +55,20 @@
 			device_preview.add_preset('mobile', {
 				resolution: '1440:2560',
 				corner_resolution: 13,
-				width_basis: 400,
 				styles: {
+					'thickness': '110px',
 					'color-a': '#e1e8eb',
-					'color-b': '#a4b7bf'
+					'color-b': '#a4b7bf',
+					'front-top-offset': '100px',
+					'front-bottom-offset': '200px',
+					'border-radius': '60px',
+					'screen-border-radius': '60px'
 				},
 				gizmos: {
 					bottom: [
 						{ type: 'speaker', position: 'left', dots: 4 },
-						{ type: 'power', position: 'center' }
+						{ type: 'power', position: 'center' },
+						{ type: 'jack', position: 'right' },
 					],
 					left: [
 						{ type: 'speaker', position: 'bottom', dots: 2 }
@@ -65,14 +76,35 @@
 					front: [
 						{ type: 'button', position: 'bottom-center' },
 						{ type: 'camera', position: 'top-left' },
-						{ type: 'html', position: 'top-right', content: '<div style="right: 0; width: 130px;">Device Preview</div>' }
+					]
+				}
+			});
+			device_preview.add_preset('mobile-2', {
+				resolution: '360:640',
+				corner_resolution: 13,
+				styles: {
+					'color-a': '#232629',
+					'color-b': '#121314'
+				},
+				gizmos: {
+					bottom: [
+						{ type: 'speaker', position: 'left', dots: 4 },
+						{ type: 'power', position: 'center' },
+						{ type: 'jack', position: 'right' },
+					],
+					left: [
+						{ type: 'speaker', position: 'bottom', dots: 2 }
+					],
+					front: [
+						{ type: 'button', position: 'bottom-center' },
+						{ type: 'camera', position: 'top-left' },
+						{ type: 'html', position: 'top-right', content: '<div style="right: 0; width: 130px; line-height: 70px; margin-top: -35px;">Device Preview</div>' }
 					]
 				}
 			});
 			device_preview.add_preset('tablet', {
 				resolution: '1600:1100',
 				corner_resolution: 13,
-				width_basis: 1200,
 				styles: {
 					'color-a': '#e1e8eb',
 					'color-b': '#a4b7bf',

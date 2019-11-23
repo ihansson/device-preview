@@ -39,10 +39,16 @@ function load(node){
 
 	let resolution_values = preset.resolution.split(':')
 	let resolution = resolution_values[1] / resolution_values[0]
+	node.device.resolution = resolution_values
 
 	let html = node.innerHTML;
 
 	let style_string = 'padding-bottom: '+(resolution * 100)+'%;';
+
+	if(!preset.styles) preset.styles = {}
+
+	preset.styles['device-width'] = resolution_values[0]+'px';
+
 	if(preset.styles) Object.keys(preset.styles).forEach(function(key){
 		style_string += '--'+key+': '+preset.styles[key]+';';
 	})
@@ -61,8 +67,9 @@ function load(node){
 				let gizmo_el = document.createElement("div")
 				gizmo_el.className = "device-gizmo device-gizmo-"+gizmo.position+" device-"+gizmo.type;
 				if(gizmo.type == 'speaker'){
-					while(gizmo.dots){
-						gizmo.dots--;
+					let dots = gizmo.dots;
+					while(dots){
+						dots--;
 						let dot = document.createElement("div")
 						dot.className = "device-speaker-dot";
 						gizmo_el.appendChild(dot)
@@ -110,8 +117,8 @@ function load(node){
 	node.className = 'device'
 
 	let scalar = document.createElement("div")
-	scalar.className = "device-scalar";
-	scalar.setAttribute("style", 'width: '+preset.width_basis+'px; height: '+(resolution * preset.width_basis)+'px;');
+	scalar.className = "device-scalar "+(node.device.animation ? node.device.animation : '');
+	scalar.setAttribute("style", 'width: '+node.device.resolution[0]+'px; height: '+(resolution * node.device.resolution[0])+'px;');
 	scalar.appendChild(shadow)
 	scalar.appendChild(wrapper)
 	node.device.scalar = scalar
@@ -152,7 +159,7 @@ function update(){
 
 // Render device
 function resize(node){
-	let width = node.device.preset.width_basis;
+	let width = node.device.resolution[0];
 	let parent_width = node.parentNode.offsetWidth;
 	node.device.scalar.style.transform = "scale("+(parent_width / width)+")"
 }
