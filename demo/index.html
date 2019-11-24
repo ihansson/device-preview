@@ -42,11 +42,24 @@
 								</select>
 							</label>
 							<label>
-								Animation: <select name="animation">
-									<option value="device-showcase" selected>Showcase</option>
-									<option value="device-turn">Turn</option>
+								Shadow: <select name="shadow">
+									<option value="default" selected>Default</option>
+									<option value="behind" selected>Always Behind</option>
+									<option value="below">Below</option>
 									<option value="off">Off</option>
 								</select>
+							</label>
+							<label>
+								Rotation: <select name="animation">
+									<option value="device-showcase" selected>Showcase</option>
+									<option value="device-turn">Turn</option>
+									<option value="off">Manual</option>
+								</select>
+							</label>
+							<label class="manual-controls">
+								X: <input name="x" type="range" min="0" max="360" value="37" /><br/>
+								Y: <input name="y" type="range" min="0" max="360" value="49" /><br/>
+								Z: <input name="z" type="range" min="0" max="360" value="5" />
 							</label>
 							<div class="example-code" style="margin-top: 10px; font-size: 10px; line-height: 1.6em;">
 					
@@ -57,7 +70,7 @@
 						</div>
 					</div>
 				</div>
-				
+
 				</div>
 
 			</section>
@@ -65,6 +78,8 @@
 
 		<script type="text/javascript" src="../dist/device-preview.min.js"></script>
 		<script type="text/javascript">
+
+			let rotation = {x: 37, y: 49, z: 5};
 
 			String.prototype.escape = function() {
 			    var tagsToReplace = {
@@ -77,7 +92,10 @@
 			    });
 			};
 
-			function change(){
+			function change(e){
+
+				if(e.target && e.target.tagName == 'INPUT') return;
+
 				let inputs = {};
 				document.querySelectorAll('select').forEach(function(node){
 					inputs[node.name] = node.value
@@ -97,17 +115,44 @@
 				} else {
 					contents = '<h3>HTML Content</h3>'
 				}
-				let options = 'preset: '+inputs.preset+'; '+media+' animation: '+inputs.animation;
-				let html = '<div device="'+options+'">'+contents+'</div>';
+
+				if(inputs.animation == 'off'){
+					document.querySelector('.manual-controls').setAttribute("style", 'display: block');
+				} else {
+					document.querySelector('.manual-controls').setAttribute("style", 'display: none');
+				}
+
+				const options = 'preset: '+inputs.preset+'; '+media+' animation: '+inputs.animation;
+				const html = '<div device="'+options+'">'+contents+'</div>';
 				document.querySelector('.display').innerHTML = html
 				document.querySelector('.example-code').innerHTML = ('<div device="'+options+'">'+contents+'</div>').escape()
+			
+				const device = document.querySelector('[device]')
 
-				device_preview.init()
+				device_preview.load(device)
+				range_update({});
+
+			}
+
+			function range_update(e){
+
+				if(e.target && e.target.tagName == 'SELECT') return;
+
+				const device = document.querySelector('[device]')
+
+				document.querySelectorAll('input[type=range]').forEach(function(node){
+					rotation[node.name] = node.value
+				})
+
+				device_preview.set_style(device, "--rotate-x: "+rotation.x+"deg; --rotate-y: "+rotation.y+"deg; --rotate-z: "+rotation.z+"deg;")
+
 			}
 
 			document.querySelector('.options').addEventListener('change', change)
 
-			change()
+			document.querySelector('.options').addEventListener('input', range_update)
+
+			change({})
 
 		</script>
 	</body>

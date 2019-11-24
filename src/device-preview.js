@@ -201,19 +201,12 @@ function load(node){
 
 	node.device.scalar = scalar
 	node.device.preset = preset;
-	node.device.resolution = resolution_values
+	node.device.resolution_values = resolution_values
+	node.device.resolution = resolution
 
-	// Set variables from styles in preset
-
-	let style_string = 'padding-bottom: '+(resolution * 100)+'%;';
-	preset.styles['device-width'] = resolution_values[0]+'px';
-	if(preset.styles) Object.keys(preset.styles).forEach(function(key){
-		style_string += '--'+key+': '+preset.styles[key]+';';
-	})
-	node.setAttribute("style", style_string);
-	
 	// Set root class and append children
 
+	set_style(node)
 	node.innerHTML = '';
 	node.className = 'device'
 	node.appendChild(scalar)
@@ -228,6 +221,18 @@ function create_el(className, styles){
 	if(className) _el.className = className;
 	if(styles) _el.setAttribute("style", styles);
 	return _el;
+}
+
+// Set variables from styles in preset
+
+function set_style(node, append){
+	let style_string = 'padding-bottom: '+(node.device.resolution * 100)+'%;';
+	node.device.preset.styles['device-width'] = node.device.resolution_values[0]+'px';
+	if(node.device.preset.styles) Object.keys(node.device.preset.styles).forEach(function(key){
+		style_string += '--'+key+': '+node.device.preset.styles[key]+';';
+	})
+	if(append) style_string += append;
+	node.setAttribute("style", style_string);
 }
 
 function corner_el(preset, position, resolution){
@@ -257,7 +262,7 @@ function update(){
 // Render device
 function resize(node){
 	if(!node.parentNode) return;
-	let width = node.device.resolution[0];
+	let width = node.device.resolution_values[0];
 	let parent_width = node.parentNode.offsetWidth;
 	node.device.scalar.style.transform = "scale("+(parent_width / width)+")"
 }
@@ -295,7 +300,9 @@ function init(){
 const _interface = {
 	add: add,
 	init: init,
-	add_preset: add_preset
+	load: load,
+	add_preset: add_preset,
+	set_style: set_style
 };
 
 window.device_preview = _interface;

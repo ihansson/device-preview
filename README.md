@@ -8,7 +8,14 @@ Render device previews with perspective from flat images
 
 - Redo corners to work with thickness
 - Fix display bugs on jacks / cameras
-
+- Make gizmos better
+- Redo colours
+- Proper glossy preset
+- Chrome preset
 - Some browser testing / Device testing
-
+- Nicer examples for media
+- Nice interactive example
+- Animate media inside example
+- Take presets out of core build
 - Make nice demo page
+	- Add previews to presets
