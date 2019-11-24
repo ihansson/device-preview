@@ -207,3 +207,31 @@ h2 {
 		padding: 25px;
 	}
 }
+
+.options-wrapper:after {
+	content: '';
+	display: table;
+	clear: both;
+}
+
+.display {
+	max-width: 60%;
+	margin: 80px auto;
+}
+
+.options label {
+	display: block;
+}
+
+@media (min-width: 800px) {
+	.options {
+		margin-top: 40px;
+		float: left;
+		width: 30%;
+	}
+	.display {
+		margin: 0;
+		float: right;
+		width: 50%;
+	}
+}

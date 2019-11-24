@@ -91,7 +91,106 @@ window["device-preview"] =
 
 let nodes = [],
 	opts = {},
-	presets = {};
+	presets = {
+		mobile: {
+			resolution: '360:640',
+			corner_resolution: 10,
+			styles: {
+				'border-radius': '20px',
+				'color-a': '#232629',
+				'color-b': '#121314'
+			},
+			gizmos: {
+				bottom: [
+					{ type: 'speaker', position: 'left', dots: 4 },
+					{ type: 'power', position: 'center' },
+					{ type: 'jack', position: 'right' },
+				],
+				left: [
+					{ type: 'speaker', position: 'bottom', dots: 2 }
+				],
+				front: [
+					{ type: 'button', position: 'bottom-center' },
+					{ type: 'camera', position: 'top-left' },
+				]
+			}
+		},
+		mobile_sharp: {
+			resolution: '340:600',
+			corner_resolution: 3,
+			styles: {
+				'thickness': '20px',
+				'border-radius': '5px',
+				'screen-border-radius': '5px',
+				'color-a': '#fafffd',
+				'color-b': '#e1f2ec',
+				'front-top-offset': '0px',
+				'front-bottom-offset': '0px',
+			},
+			gizmos: {
+				bottom: [
+					{ type: 'speaker', position: 'left', dots: 4 },
+					{ type: 'power', position: 'center' },
+					{ type: 'jack', position: 'right' },
+				],
+				left: [
+					{ type: 'speaker', position: 'bottom', dots: 2 }
+				]
+			}
+		},
+		tablet: {
+			resolution: '600:450',
+			corner_resolution: 12,
+			styles: {
+				'thickness': '15px',
+				'border-radius': '15px',
+				'screen-border-radius': '15px',
+				'color-a': '#8f8979',
+				'color-b': '#ded5bf',
+				'front-top-offset': '0px',
+				'front-bottom-offset': '0px',
+			},
+			gizmos: {
+				bottom: [
+					{ type: 'speaker', position: 'left', dots: 4 },
+					{ type: 'power', position: 'center' },
+					{ type: 'jack', position: 'right' },
+				],
+				left: [
+					{ type: 'speaker', position: 'bottom', dots: 2 }
+				]
+			}
+		},
+		thick: {
+			resolution: '320:320',
+			corner_resolution: 12,
+			styles: {
+				'thickness': '45px',
+				'border-radius': '15px',
+				'screen-border-radius': '15px',
+				'color-a': '#5dcf9f',
+				'color-b': '#c0eb78',
+			},
+			gizmos: {
+				bottom: [
+					{ type: 'speaker', position: 'left', dots: 4 },
+					{ type: 'power', position: 'center' },
+					{ type: 'jack', position: 'right' },
+				],
+				left: [
+					{ type: 'speaker', position: 'bottom', dots: 2 }
+				],
+				front: [
+					{ type: 'button', position: 'bottom-center' },
+					{ type: 'camera', position: 'top-left' },
+					{ type: 'html', position: 'top-right', 'content': 'Thick' },
+				],
+				top: [
+					{ type: 'speaker', position: 'center', dots: 4 },
+				]
+			}
+		},
+	};
 
 
 // Setup before first update
@@ -102,68 +201,48 @@ function add(selector, options){
 	nodes = nodes.concat(_nodes)
 }
 
-// Remove node from list to update
-function remove(node){
-	if(node.device.timeout) window.clearTimeout(node.device.timeout)
-	nodes = nodes.filter(function(_node){ return _node !== node})
-}
-
 // Sets up initial classes on nodes
 function load(node){
 
 	node.device = {
 		type: 'html',
+		preset: 'mobile'
 	}
 
+	// Extract settings from device attribute
+
 	if(node.attributes.device){
-		let settings = node.attributes.device ? extract_settings(node.attributes.device.nodeValue) : {};
+		const settings = node.attributes.device ? extract_settings(node.attributes.device.nodeValue) : {};
 		for(setting in settings){
 			node.device[setting] = settings[setting]
 		}
 	}
 
-	let preset = presets[node.device.preset]
+	// Get preset and resolution settings
 
-	node.device.preset = preset;
+	const preset = presets[node.device.preset]
+	const innerHTML = node.innerHTML;
+	const resolution_values = preset.resolution.split(':')
+	const resolution = resolution_values[1] / resolution_values[0]
 
-	if(!preset.gizmos) preset.gizmos = {}
+	// Create wrapper and containing section elements
 
-	let resolution_values = preset.resolution.split(':')
-	let resolution = resolution_values[1] / resolution_values[0]
-	node.device.resolution = resolution_values
+	let wrapper = create_el("device-wrapper");
 
-	let html = node.innerHTML;
+	['back','left','right','top','bottom','corners','front'].forEach(piece => {
 
-	let style_string = 'padding-bottom: '+(resolution * 100)+'%;';
+		const el = create_el("device-"+piece)
 
-	if(!preset.styles) preset.styles = {}
-
-	preset.styles['device-width'] = resolution_values[0]+'px';
-
-	if(preset.styles) Object.keys(preset.styles).forEach(function(key){
-		style_string += '--'+key+': '+preset.styles[key]+';';
-	})
-	node.setAttribute("style", style_string);
-
-	let wrapper = document.createElement("div")
-	wrapper.className = "device-wrapper";
-
-	['back',,'left','right','top','bottom','corners','front'].forEach(piece => {
-
-		const el = document.createElement("div")
-		el.className = "device-"+piece;
+		// Add gizmos to piece
 
 		if(preset.gizmos[piece]){
 			preset.gizmos[piece].forEach(function(gizmo) {
-				let gizmo_el = document.createElement("div")
-				gizmo_el.className = "device-gizmo device-gizmo-"+gizmo.position+" device-"+gizmo.type;
+				let gizmo_el = create_el("device-gizmo device-gizmo-"+gizmo.position+" device-"+gizmo.type)
 				if(gizmo.type == 'speaker'){
 					let dots = gizmo.dots;
 					while(dots){
 						dots--;
-						let dot = document.createElement("div")
-						dot.className = "device-speaker-dot";
-						gizmo_el.appendChild(dot)
+						gizmo_el.appendChild(create_el("device-speaker-dot"))
 					}
 				}
 				if(gizmo.type == 'html'){
@@ -173,15 +252,18 @@ function load(node){
 			})
 		}
 
+		// Add corner pieces
+
 		if(piece == 'corners'){
 			['bottom-left','bottom-right','top-left','top-right'].forEach(function(corner){
-				el.appendChild(corner_el(corner, preset.corner_resolution))
+				el.appendChild(corner_el(preset, corner, preset.corner_resolution))
 			})
 		}
 
+		// Add front pieces
+
 		if(piece == 'front'){
-			let screen = document.createElement("div")
-			screen.className = "device-screen";
+			let screen = create_el("device-screen")
 			if(node.device.image){
 				screen.setAttribute("style", "background-image: url("+node.device.image+")");
 			} else if(node.device.video){
@@ -189,7 +271,7 @@ function load(node){
 			} else if(node.device.iframe){
 				screen.innerHTML = '<iframe class="device-screen-iframe" src="'+node.device.iframe+'""></iframe>';
 			} else {
-				screen.innerHTML = html;
+				screen.innerHTML = innerHTML;
 			}
 			el.appendChild(screen)
 		}
@@ -198,22 +280,33 @@ function load(node){
 
 	})
 
-	let shadow = document.createElement("div")
-	shadow.className = "device-shadow";
-	let shadow_inner = document.createElement("div")
-	shadow_inner.className = "device-shadow-inner";
-	shadow.appendChild(shadow_inner)
+	// Create shadow and scalar layers
+
+	let shadow = create_el("device-shadow")
+	shadow.appendChild(create_el("device-shadow-inner"))
+	let scalar = create_el("device-scalar "+(node.device.animation ? node.device.animation : ''), 'width: '+resolution_values[0]+'px; height: '+(resolution * resolution_values[0])+'px;')
+	scalar.appendChild(shadow)
+	scalar.appendChild(wrapper)
+
+	// Store values on node for usage in updating
+
+	node.device.scalar = scalar
+	node.device.preset = preset;
+	node.device.resolution = resolution_values
+
+	// Set variables from styles in preset
+
+	let style_string = 'padding-bottom: '+(resolution * 100)+'%;';
+	preset.styles['device-width'] = resolution_values[0]+'px';
+	if(preset.styles) Object.keys(preset.styles).forEach(function(key){
+		style_string += '--'+key+': '+preset.styles[key]+';';
+	})
+	node.setAttribute("style", style_string);
+	
+	// Set root class and append children
 
 	node.innerHTML = '';
 	node.className = 'device'
-
-	let scalar = document.createElement("div")
-	scalar.className = "device-scalar "+(node.device.animation ? node.device.animation : '');
-	scalar.setAttribute("style", 'width: '+node.device.resolution[0]+'px; height: '+(resolution * node.device.resolution[0])+'px;');
-	scalar.appendChild(shadow)
-	scalar.appendChild(wrapper)
-	node.device.scalar = scalar
-
 	node.appendChild(scalar)
 	resize(node)
 
@@ -221,17 +314,21 @@ function load(node){
 
 // Dom elements
 
-function corner_el(position, resolution){
-	const el = document.createElement("div")
-	el.className = "device-corner "+position
+function create_el(className, styles){
+	let _el = document.createElement("div")
+	if(className) _el.className = className;
+	if(styles) _el.setAttribute("style", styles);
+	return _el;
+}
+
+function corner_el(preset, position, resolution){
+	const el = create_el("device-corner "+position)
 	let _previous_segment
 	let rotation_per_segment = 90 / resolution;
-	let width = 30 / resolution; // CHANGE THIS TO BORDER RADIUS * 1.5
+	let width = (parseInt(preset.styles['border-radius']) * 1.55) / resolution;
 	while(resolution){
 		resolution--;
-		let segment = document.createElement("div")
-		segment.className = "device-corner-segment";
-		segment.setAttribute("style", "transform: rotateY("+rotation_per_segment+"deg); width:"+width+"px");
+		let segment = create_el("device-corner-segment", "transform: rotateY("+rotation_per_segment+"deg); width:"+width+"px")
 		if(_previous_segment){
 			_previous_segment.appendChild(segment)
 		} else {
@@ -250,6 +347,7 @@ function update(){
 
 // Render device
 function resize(node){
+	if(!node.parentNode) return;
 	let width = node.device.resolution[0];
 	let parent_width = node.parentNode.offsetWidth;
 	node.device.scalar.style.transform = "scale("+(parent_width / width)+")"
@@ -264,8 +362,6 @@ function extract_settings(string){
 		if(!arr[0]) return;
 		let key = arr[0].trim();
 		let value = arr[1] ? arr[1].trim() : true;
-		if(['numeric...'].indexOf(key) !== -1) value = parseInt(value)
-		if(['numeric_map...'].indexOf(key) !== -1) value = value.split(',').map(function(value){ return parseFloat(value) })
 		settings[key] = arr[1] ? value : true
 	});
 	return settings;
@@ -276,8 +372,9 @@ function add_preset(name, options){
 	presets[name] = options
 }
 
-// Bind resize event to update renders
-function bind(){
+// Set default options
+function init(){
+	add('[device]');
 	window.addEventListener('resize', update)
 	window.setTimeout(function(){
 		let event = document.createEvent("Event");
@@ -286,46 +383,15 @@ function bind(){
 	}, 60)
 }
 
-// Unbind events
-function unbind(){
-	window.removeEventListener('resize', update)
-}
-
-// Set default options
-function init(options){
-	add('[device]');
-	bind();
-}
-
 const _interface = {
 	add: add,
-	remove: remove,
-	bind: bind,
-	unbind: unbind,
 	init: init,
 	add_preset: add_preset
 };
 
 window.device_preview = _interface;
-
 module.exports = _interface;
 
-
-// TEMP
-
-var range_nodes = document.querySelectorAll('[type=range]')
-
-range_nodes.forEach(function(node){
-	node.addEventListener('input', function(e){
-		document.querySelector('#'+e.target.attributes.id.nodeValue+'-value').innerHTML = e.target.value
-		document.querySelectorAll('.device-wrapper').forEach(function(device){
-			device.setAttribute("style", "transform: rotateX("+document.getElementById('x').value+"deg) rotateY("+document.getElementById('y').value+"deg) rotateZ("+document.getElementById('z').value+"deg);");
-		})
-		document.querySelectorAll('.device-shadow-inner').forEach(function(device){
-			device.setAttribute("style", "transform: rotateX("+document.getElementById('x').value+"deg) rotateY("+document.getElementById('y').value+"deg) rotateZ("+document.getElementById('z').value+"deg);");
-		})
-	});
-});
 
 /***/ })
 /******/ ]);

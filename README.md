@@ -6,12 +6,8 @@ Render device previews with perspective from flat images
 
 @todo for 0.1
 
-- Add default presets
-
 - Redo corners to work with thickness
-
-- Improve styles
-- Improve codebase
+- Fix display bugs on jacks / cameras
 
 - Some browser testing / Device testing
 

@@ -21,109 +21,107 @@
 				</dl>
 			</header>
 			<section class="page">
-				<h2>Mobile</h2>
-<div id="x-value">37</div>
-<input type="range" min="0" max="360" value="37" class="slider" id="x">
-<div id="y-value">49</div>
-<input type="range" min="0" max="360" value="49" class="slider" id="y">
-<div id="z-value">5</div>
-<input type="range" min="0" max="360" value="5" class="slider" id="z">
-<div class="code">code</div>
-				<div style="width: 400px; margin: 100px auto;">
-					<div device="preset: mobile-2; image: screenshot-mobile.png;"></div>
-				</div>
-				<div style="width: 400px; margin: 100px auto;">
-					<div device="preset: mobile; image: screenshot-mobile.png; animation: device-wobble"></div>
-				</div>
-				<div style="width: 400px; margin: 100px auto;">
-					<div device="preset: mobile-2; image: screenshot-mobile.png; animation: device-turn"></div>
-				</div>
-				<div style="width: 400px; margin: 100px auto;">
-					<div device="preset: mobile-2; image: screenshot-mobile.png; animation: device-showcase"></div>
-					<!--
-					<div device="preset: mobile; video: video.mp4"></div>
-					<div device="preset: mobile; iframe: http://example.com/"></div>
-					<div device="preset: mobile;">
-						<h6>HTML Content</h6>
+
+				<div class="demo">
+					<div class="options-wrapper">
+						<div class="options">
+							<label>
+								Preset: <select name="preset">
+									<option value="mobile">Mobile</option>
+									<option value="mobile_sharp" selected>Mobile Sharp</option>
+									<option value="tablet">Tablet</option>
+									<option value="thick">Thick</option>
+								</select>
+							</label>
+							<label>
+								Media: <select name="media">
+									<option value="image" selected>Image</option>
+									<option value="video">Video</option>
+									<option value="iframe">Iframe</option>
+									<option value="html">HTML</option>
+								</select>
+							</label>
+							<label>
+								Animation: <select name="animation">
+									<option value="device-showcase" selected>Showcase</option>
+									<option value="device-turn">Turn</option>
+									<option value="off">Off</option>
+								</select>
+							</label>
+							<div class="example-code" style="margin-top: 10px; font-size: 10px; line-height: 1.6em;">
+					
+							</div>
+						</div>
+						<div class="display">
+							<div device="preset: mobile_sharp; image: screenshot-mobile.png; animation: device-showcase"></div>
+						</div>
 					</div>
+				</div>
+				<!--
+					<div style="width: 400px; margin: 100px auto;">
+						<div device="preset: mobile; image: screenshot-mobile.png; animation: device-showcase"></div>
+					</div>
+					<div style="width: 400px; margin: 100px auto;">
+						<div device="preset: mobile_sharp; image: screenshot-mobile.png; animation: device-showcase"></div>
+					</div>
+					<div style="width: 800px; margin: 100px auto;">
+						<div device="preset: table; image: screenshot.png; animation: device-showcase"></div>
+					</div>
+					<div style="width: 400px; margin: 100px auto;">
+						<div device="preset: thick; image: screenshot.png; animation: device-showcase"></div>
+					</div>
+
 					-->
 				</div>
+
 			</section>
 		</article>
+
 		<script type="text/javascript" src="../dist/device-preview.min.js"></script>
 		<script type="text/javascript">
-			device_preview.add_preset('mobile', {
-				resolution: '1440:2560',
-				corner_resolution: 13,
-				styles: {
-					'thickness': '110px',
-					'color-a': '#e1e8eb',
-					'color-b': '#a4b7bf',
-					'front-top-offset': '100px',
-					'front-bottom-offset': '200px',
-					'border-radius': '60px',
-					'screen-border-radius': '60px'
-				},
-				gizmos: {
-					bottom: [
-						{ type: 'speaker', position: 'left', dots: 4 },
-						{ type: 'power', position: 'center' },
-						{ type: 'jack', position: 'right' },
-					],
-					left: [
-						{ type: 'speaker', position: 'bottom', dots: 2 }
-					],
-					front: [
-						{ type: 'button', position: 'bottom-center' },
-						{ type: 'camera', position: 'top-left' },
-					]
+
+			String.prototype.escape = function() {
+			    var tagsToReplace = {
+			        '&': '&amp;',
+			        '<': '&lt;',
+			        '>': '&gt;'
+			    };
+			    return this.replace(/[&<>]/g, function(tag) {
+			        return tagsToReplace[tag] || tag;
+			    });
+			};
+
+			function change(){
+				let inputs = {};
+				document.querySelectorAll('select').forEach(function(node){
+					inputs[node.name] = node.value
+				})
+				let media = '';
+				let contents = '';
+				if(inputs.media == 'image'){
+					if(inputs.preset == 'tablet'){
+						media = 'image: screenshot.png;';
+					} else {
+						media = 'image: screenshot-mobile.png;';
+					}
+				} else if(inputs.media == 'video'){
+					media = 'video: video.mp4;';
+				} else if(inputs.media == 'iframe'){
+					media = 'iframe: test.html;';
+				} else {
+					contents = '<h3>HTML Content</h3>'
 				}
-			});
-			device_preview.add_preset('mobile-2', {
-				resolution: '360:640',
-				corner_resolution: 13,
-				styles: {
-					'color-a': '#232629',
-					'color-b': '#121314'
-				},
-				gizmos: {
-					bottom: [
-						{ type: 'speaker', position: 'left', dots: 4 },
-						{ type: 'power', position: 'center' },
-						{ type: 'jack', position: 'right' },
-					],
-					left: [
-						{ type: 'speaker', position: 'bottom', dots: 2 }
-					],
-					front: [
-						{ type: 'button', position: 'bottom-center' },
-						{ type: 'camera', position: 'top-left' },
-						{ type: 'html', position: 'top-right', content: '<div style="right: 0; width: 130px; line-height: 70px; margin-top: -35px;">Device Preview</div>' }
-					]
-				}
-			});
-			device_preview.add_preset('tablet', {
-				resolution: '1600:1100',
-				corner_resolution: 13,
-				styles: {
-					'color-a': '#e1e8eb',
-					'color-b': '#a4b7bf',
-					'front-top-offset': '0px',
-					'front-bottom-offset': '0px',
-					'border-radius': '20px',
-					'screen-border-radius': '20px'
-				},
-				gizmos: {
-					bottom: [
-						{ type: 'speaker', position: 'left', dots: 4 },
-						{ type: 'power', position: 'center' }
-					],
-					left: [
-						{ type: 'speaker', position: 'bottom', dots: 2 }
-					]
-				}
-			});
-			device_preview.init()
+				let options = 'preset: '+inputs.preset+'; '+media+' animation: '+inputs.animation;
+				let html = '<div device="'+options+'">'+contents+'</div>';
+				document.querySelector('.display').innerHTML = html
+				document.querySelector('.example-code').innerHTML = ('<div device="'+options+'">'+contents+'</div>').escape()
+
+				device_preview.init()
+			}
+
+			document.querySelector('.options').addEventListener('change', change)
+
+			change()
 		</script>
 	</body>
 </html>
